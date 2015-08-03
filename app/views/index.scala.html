@@ -1,0 +1,72 @@
+@(message: String)(implicit session: play.api.mvc.Session)
+
+@main("DealFlow") {
+    <div><center><a href="/takeMeOut">---</a></center></div>
+    <center id="error"><h1> Loading ... </h1></center>
+    <div id="tiles" class="row-fluid"></div>
+
+<script type="text/javascript">
+
+        var icons = ['/assets/images/like.png', '/assets/images/busy.png', '/assets/images/briefcase.png'];
+
+        function getTile(name, count, i) {
+            var line = '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"><div class="tile"><img src=" ' + icons[i] + ' " alt=""/><h1 class="tile-title" style="font-size: 900%; color:#b82025;"> ' + count + ' </h1><label> ' + name + '<label></div></div>'
+            return line;
+        };
+
+        function getTitleTile(name, count) {
+            var line = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><div class="tile"><p style="font-size: 120%"> ' + name + '</p><h1 class="tile-title" style="font-size: 900%; color: #b82025;"> ' + count + ' </h1></div></div>'
+            return line;
+        };
+
+        if (!!window.EventSource) {
+
+            var source = new EventSource("/stream");
+
+            source.addEventListener('message', function(e) {
+                var stats = JSON.parse(e.data);
+
+                if (stats.failure) {
+
+                    console.log(stats.reason);
+
+                    return;
+                } else {
+                    console.log(e.data);
+
+                    $("#error").html('');
+
+                    var stats = JSON.parse(e.data);
+
+                    var line = getTitleTile("DEALS SEEN", stats.total);
+
+                    for(var i = 0; i < stats.stages.length; i ++) {
+                        var list = stats.stages;
+                        line = line + getTile(list[i].name.toUpperCase(), list[i].count, i);
+                    }
+
+                    $("#tiles").html(line);
+
+                    return;
+                }
+
+            }, false);
+
+            source.addEventListener('open', function(e) {
+                  console.log(e);
+            }, false);
+
+            source.addEventListener('error', function(e) {
+                console.log(e.data);
+
+                if (e.readyState == EventSource.CLOSED) {
+                    $("#error").html("<h4>Event Source Closed. Please Refresh to Get Results.</h4>");
+                }
+
+            }, false);
+
+        } else {
+            $("#error").html('<span>This browser does not support Event Source</span>');
+        }
+    </script>
+}

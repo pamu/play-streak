@@ -1,0 +1,15 @@
+@(form: Form[String])(implicit session: play.api.mvc.Session)
+
+@main("DealFlow"){
+    <div>
+        <form role="form" method="post" action="startPost">
+            <div class="form-group">
+                <label for="key">Streak Key</label>
+                <input type="text" class="form-control" id="key" name="key" placeholder="Enter Streak Key">
+            </div>
+            <center>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </center>
+        </form>
+    </div>
+}

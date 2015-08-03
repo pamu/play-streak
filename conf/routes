@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Auth Controller
+
+GET     /login                      controllers.Auth.login()
+
+# Application Controller
+
+GET     /                           controllers.Application.index()
+GET     /start                      controllers.Application.start()
+POST    /startPost                  controllers.Application.startPost()
+GET     /takeMeOut                  controllers.Application.takeMeOut()
+GET     /stream                     controllers.Application.stream()
+
+GET     /boxes                      controllers.Application.boxes()
+GET     /dealflow                   controllers.Application.dealflow()
+GET     /pipelines                  controllers.Application.pipelines()
+GET     /stages                     controllers.Application.stages()
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /webjars/*file              controllers.WebJarAssets.at(file)
